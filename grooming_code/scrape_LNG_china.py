@@ -4,6 +4,7 @@
 # #https://www.shpgx.com/html/jkxhLNGdajglssj.html
 
 #%%
+# LOAD LIBRARIES
 #nomally you will wanna run the requests html library using async options because of how vs code and juptyer notebooks interact. 
 from requests_html import AsyncHTMLSession
 from bs4 import BeautifulSoup
@@ -17,8 +18,10 @@ import nest_asyncio
 
 
 #%%
+#PLease note that you will need to b using the office guest wifi cause of security tag issues
 url = 'https://www.shpgx.com/html/jkxhLNGdajglssj.html'
 file_name = '../input_data/html/jkxhLNGdajglssj.txt'
+file_name_csv = '../output_data/csv/LNG_China_{}.csv'.format(datetime.datetime.now().strftime('%Y%m%d'))
 
 nest_asyncio.apply()#run when doing async things
 asession = AsyncHTMLSession()#run when doing async things
@@ -124,8 +127,7 @@ for i in range(int(len(rows)/4)):
             break
     fwd_price_3 = row_data[3].split(':')[1]
     
-    new_row = pd.DataFrame([[current_date, fwd_month_1, fwd_price_1, fwd_month_2, fwd_price_2, fwd_month_3, fwd_price_3]], columns=df.columns)
-
+    new_row = pd.DataFrame([current_date, fwd_month_1, fwd_price_1, fwd_month_2, fwd_price_2, fwd_month_3, fwd_price_3])
     #add all to a row
     df = pd.concat([new_row, df], axis=0)#add the row to the dataframe
 
@@ -133,6 +135,6 @@ for i in range(int(len(rows)/4)):
 #we now have the data we wanted. save to csv cause we done
 
 
+df.to_csv(file_name_csv, index=False)#save the dataframe to a csv file
 
-
-
+#%%
